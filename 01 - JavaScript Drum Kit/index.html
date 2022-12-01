@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>JS Drum Kit</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="keys">
+			<div data-key="65" class="key">
+				<kbd>A</kbd>
+				<span class="sound">clap</span>
+			</div>
+			<div data-key="83" class="key">
+				<kbd>S</kbd>
+				<span class="sound">hihat</span>
+			</div>
+			<div data-key="68" class="key">
+				<kbd>D</kbd>
+				<span class="sound">kick</span>
+			</div>
+			<div data-key="70" class="key">
+				<kbd>F</kbd>
+				<span class="sound">openhat</span>
+			</div>
+			<div data-key="71" class="key">
+				<kbd>G</kbd>
+				<span class="sound">boom</span>
+			</div>
+			<div data-key="72" class="key">
+				<kbd>H</kbd>
+				<span class="sound">ride</span>
+			</div>
+			<div data-key="74" class="key">
+				<kbd>J</kbd>
+				<span class="sound">snare</span>
+			</div>
+			<div data-key="75" class="key">
+				<kbd>K</kbd>
+				<span class="sound">tom</span>
+			</div>
+			<div data-key="76" class="key">
+				<kbd>L</kbd>
+				<span class="sound">tink</span>
+			</div>
+		</div>
+
+		<div class="sounds">
+			<audio data-key="65" src="sounds/clap.wav"></audio>
+			<audio data-key="83" src="sounds/hihat.wav"></audio>
+			<audio data-key="68" src="sounds/kick.wav"></audio>
+			<audio data-key="70" src="sounds/openhat.wav"></audio>
+			<audio data-key="71" src="sounds/boom.wav"></audio>
+			<audio data-key="72" src="sounds/ride.wav"></audio>
+			<audio data-key="74" src="sounds/snare.wav"></audio>
+			<audio data-key="75" src="sounds/tom.wav"></audio>
+			<audio data-key="76" src="sounds/tink.wav"></audio>
+		</div>
+
+		<script>
+			const keys = document.getElementsByClassName("keys")[0].children;
+			const sounds = document.getElementsByClassName("sounds")[0].children;
+
+			// key mapping for keyboard input
+			const keyPairs = {
+				KeyA: 65,
+				KeyS: 83,
+				KeyD: 68,
+				KeyF: 70,
+				KeyG: 71,
+				KeyH: 72,
+				KeyJ: 74,
+				KeyK: 75,
+				KeyL: 76,
+			};
+
+			// get keyboard character code
+			document.addEventListener("keypress", (e) => {
+				relateKeys(e.code);
+			});
+
+			// relate letter key to its property value
+			const relateKeys = (keyCode) => {
+				for (const code in keyPairs) {
+					if (keyCode === code) {
+						playSound(keyPairs[code]);
+						break;
+					}
+				}
+			};
+
+			const playSound = (keyCodeNumber) => {
+				for (const item in sounds) {
+					const audio = sounds[item];
+					if (audio.dataset.key == keyCodeNumber) {
+						audio.currentTime = 0;
+						audio.play();
+						updateStyle(keyCodeNumber, audio);
+						break;
+					}
+				}
+			};
+
+			const updateStyle = (keyCodeNumber, audioData) => {
+				for (const item in keys) {
+					const pad = keys[item];
+					if (pad.dataset.key == keyCodeNumber) {
+						pad.classList = "key playing";
+						setTimeout(() => {
+							pad.classList = "key ";
+						}, 500);
+						break;
+					}
+				}
+			};
+			// when a pad is clicked
+			for (const item in keys) {
+				keys[item].addEventListener("click", () => {
+					const keyCodeNumber = keys[item].dataset.key;
+					playSound(keyCodeNumber);
+				});
+			}
+
+		</script>
+	</body>
+	</html>
